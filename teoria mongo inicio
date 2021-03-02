@@ -1,0 +1,146 @@
+1) Para conectarse a una base de datos
+
+	show dbs -------> con esto nos indica todas las bases que hay
+	use training ----> con esto nos conectamos a la base que queremos en este caso training
+
+2) Para que nos muestre colecciones de esa base de datos que elegimos.
+
+	show collections
+
+3) Para ver una coleccion siempre va a ser db.___.find()
+
+	db.books.find()
+
+4) Para crear una coleccion es :
+
+	db.persoas.insert({"nome":"Luis","numeros":[23,5]})
+
+5) Para acceder a esa coleccion que creamos
+
+	db.persoas.find()
+
+6) Donde el nombre sea igual a Luis
+
+	db.persoas.find({nome:{$eq:"Luis"}})
+
+7) Donde el nombre no sea Luis
+
+	db.persoas.find({nome:{$ne:"Luis"}})
+Este ne muestra que no sea y también muestra aquellos campos que no existe. Lo de nombre...
+
+8) Amosa o documento edade que son maior que 30
+
+	db.persoas.find({edade:{$gt:30}})
+
+9) maior o igual ca 30
+
+	db.persoas.find({edade:{$gte:30}})
+
+10) menor que 40	OJO!!!---> cuanto te dice que tiene que ver con estos 2 siempre va a ir entre [ ]
+
+	db.persoas.find({edade:{$lt:40}})
+
+11) Amosar aqueles documentos do campo edade menor que 40 ou nome Ana.      
+
+	db.persoas.find({$or:[{edade:{$lt:40}},{nome:"ana"}]}]
+ Con or significa que cumpla con una de ellas
+ COn AND evalua que las 2 condiciones se cumpla
+
+12) Amosar o campo edade non sexa maior que 29
+
+	db.persoas.find({edade:{$not:{gt:29}}})
+
+13) No cumple ninguno de los valores especificados
+
+	db.persoas.find({$nor:[{edade:30},{nome:"ana"}]})
+
+14) Si no existe que no lo muuestre
+
+	db.persoas.find({$nor:[{edade:30},{edade:{"$exists:false}},{nome:"ana"},{nome:{$exists:false}}]})
+
+15) Me está mostrando de todos los documentos el campo edade.
+	
+	db.persoas.finde({},{edade:1});
+
+16) MUestra todos lo campos del registro excepto el campo edade.
+
+	db.persoas.find({},{edade:0});
+
+17) Muestara todo el campo edad y quita el _id que sale por defecto
+
+	db.persoas.find({},{_id:0,edade:1});
+
+18) Aquellos que contengan una "L"
+
+	db.persoas.find({nome:{"$regex:"L"}})
+
+19) Aquellos que comience por "l" y aquellos que finalicen por "l"
+	db.persoas.find({nome:{$regex:"^l"}})
+ 	db.persoas.find({nome:{$regex:"l$"}})
+
+20) Que nos muestre que tenga la letra "i" y después la letra "a"
+
+	db.persoas.find({nome:{$regex:/i.*a/}})		/ / es igual que " "
+
+21) Por usar cadenas que nos muestre lo que queramos aunque haya retorno osea /n que nos lo muestre igual
+
+	db.persoas.find({nome:{$regex:/i.*a/,options :"s"}})   
+	 hay que poner options:"s" para que noes muestre todo aunque haya cambio de linea
+	options:"s"-----> para que ignore /n
+	options :"is"----> para que de igual si lleve mayuscula o minuscula , que nos lo muestre igual y lo otor ignore/n
+
+22) Para que nos ordene alfabeticament3e y de forma ascendente
+
+	db.persoas.find().sort({nome:1})
+	db.persoas.find().sort({nome:-1})
+
+23) EL .sort se aplica despues de toda la busqueda
+
+	db.persoas.find({nome:{$regex:/i.*a/,options:"s"}}).sort({edade:-1})
+
+24) Si la consulta hay 2 o mas y solo queremos que aparezca uno ponemos .limit(1)
+	
+	db.persoas.find({nome:{$regex:/i.*a/,options:"s"}}).sort({edade:-1}).limit(1)
+
+25) Como contamos cuantos elementos hay en una coleccion
+	
+	db.scores.find().count()
+
+26) Encontrar los 5 primeros documentos donde la puntuacion score es menor que 60 ordenador por el campo student
+
+	db.persoas.find({"scores":{$lt:60}})).sort({"student":1}).limit(5)
+
+27) Nosotros cuando inserimos un campo y luego queremos cambiarlo utilizamos.
+
+	db.stuff.update({"_id":123},{"hello":"world"});
+
+	Este update hace que nos cambie todo lo que teniamos hecho por un "hello:world"
+
+28) NOs insiere un campo mas sin cambiar nada
+
+	db.stuff.update({"_id":123},{"$set":{"nome":"pepito"}});
+
+	este "$set" sirve para que no cambie todo el documento sino que añada un campo mais.
+	ojoo!!-----> si a clave de un par(campo) existe cambia solo el valor, si a clase non existe engade un nuevo par.
+
+29)$unset seria para eliminar un campo
+	
+	db.stuff.update({"_id":123},{"$unset":{"edade":51}});
+
+	
+30) Utilizamos $inc , porque incrementa el valor dependiendo del número que le pongas
+
+	db.stuff.update({"_id":123},{"$inc":{"edade":"1"}});
+
+31) SI el registro no existe, no se puede moficiar, pero mediante UPSERT nos crea ese registro, con esto crea la fila si no existiera. 
+
+	db.stuff.update({"_id":123},{"$set":{"edade":"4"}},{"upset":true});
+
+32) Para que nos incremente el campo edade a 1 ponemos $inc, para que modifique toda la coleccion de tipo edade para que incremente su valor 1 de ese campo ponemos multi.
+
+	db.stuff.update({},{"$inc":{"edade":1}},{"multi":true});
+
+
+	
+
+
